@@ -14,9 +14,15 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Button;
 import androidx.appcompat.widget.Toolbar;
@@ -28,6 +34,9 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ExploreActivity extends AppCompatActivity {
     private static final String TAG = ExploreActivity.class.getSimpleName();
@@ -37,6 +46,10 @@ public class ExploreActivity extends AppCompatActivity {
     private final RestaurantService restaurantService = new RestaurantService();
     private RestaurantAdapter restaurantAdapter;
     private EditText search;
+    private String searchTxt;
+    private LinearLayout fastFood;
+    private LinearLayout mexican;
+    private LinearLayout asian;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Toolbar toolbar;
@@ -52,21 +65,16 @@ public class ExploreActivity extends AppCompatActivity {
         //Set the Layout Manager
         restaurantView.setLayoutManager(new GridLayoutManager(ExploreActivity.this, 2));
 
-//        search = (EditText)findViewById(R.id.search);
-//        String searchTxt = search.getText().toString();
-//        if (searchTxt.trim().length() == 0) {
-//            search.setError("Search can't be empty!");
-//            search.requestFocus();
-//            return;
-//        }
+        search = (EditText)findViewById(R.id.search);
 
         restaurants = new ArrayList<>();
         MutableLiveData<ArrayList<Restaurant>> restaurantsLiveData = restaurantService.getRestaurants();
         restaurantsLiveData.observe(this, new Observer<ArrayList<Restaurant>>() {
             @Override
-            public void onChanged(ArrayList<Restaurant> restaurants) {
-                Log.d(TAG, "onChanged: " + restaurants.size());
-                restaurantAdapter = new RestaurantAdapter(ExploreActivity.this, restaurants);
+            public void onChanged(ArrayList<Restaurant> liveRestaurants) {
+                Log.d(TAG, "onChanged: " + liveRestaurants.size());
+                restaurants = liveRestaurants;
+                restaurantAdapter = new RestaurantAdapter(ExploreActivity.this, liveRestaurants);
                 restaurantView.setAdapter(restaurantAdapter);
                 restaurantAdapter.notifyDataSetChanged();
                 restaurantView.scheduleLayoutAnimation();
@@ -116,14 +124,86 @@ public class ExploreActivity extends AppCompatActivity {
                 Boolean ok = recyclerView.canScrollVertically(1);
                 Log.i(TAG, " ok " + ok.toString());
                 if (!recyclerView.canScrollVertically(1) && newState==RecyclerView.SCROLL_STATE_IDLE) {
-//                    toolbar.setVisibility(View.INVISIBLE);
                     Log.i(TAG,"end");
                 } else {
-//                    toolbar.setVisibility(View.VISIBLE);
                 }
             }
         });
 
+        search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                 searchTxt = search.getText().toString();
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    Log.d(TAG,"search action");
+                    ArrayList<Restaurant> r = search(searchTxt);
+                    restaurantAdapter = new RestaurantAdapter(ExploreActivity.this, r);
+                    Log.d(TAG,"search results count: " + String.valueOf( r.size() ));
+                    restaurantView.setAdapter(restaurantAdapter);
+                    restaurantAdapter.notifyDataSetChanged();
+                    restaurantView.scheduleLayoutAnimation();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        fastFood = (LinearLayout) findViewById(R.id.fastfood);
+        mexican = (LinearLayout) findViewById(R.id.mexican);
+        asian = (LinearLayout) findViewById(R.id.asian);
+
+        fastFood.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayList<Restaurant> r = category("fastfood");
+                Log.d(TAG,"before search count: " + restaurants.size());
+                restaurantAdapter = new RestaurantAdapter(ExploreActivity.this, r);
+                Log.d(TAG,"search results count: " + String.valueOf( r.size() ));
+                restaurantView.setAdapter(restaurantAdapter);
+                restaurantAdapter.notifyDataSetChanged();
+                restaurantView.scheduleLayoutAnimation();
+            }
+        });
+
+        mexican.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayList<Restaurant> r = category("mexican");
+                Log.d(TAG,"before search count: " + restaurants.size());
+                restaurantAdapter = new RestaurantAdapter(ExploreActivity.this, r);
+                Log.d(TAG,"search results count: " + String.valueOf( r.size() ));
+                restaurantView.setAdapter(restaurantAdapter);
+                restaurantAdapter.notifyDataSetChanged();
+                restaurantView.scheduleLayoutAnimation();
+            }
+        });
+
+        asian.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayList<Restaurant> r = category("asian");
+                Log.d(TAG,"before search count: " + restaurants.size());
+                restaurantAdapter = new RestaurantAdapter(ExploreActivity.this, r);
+                Log.d(TAG,"search results count: " + String.valueOf( r.size() ));
+                restaurantView.setAdapter(restaurantAdapter);
+                restaurantAdapter.notifyDataSetChanged();
+                restaurantView.scheduleLayoutAnimation();
+            }
+        });
+
+
+    }
+
+    private ArrayList<Restaurant> category(String category) {
+        return new ArrayList<Restaurant>( restaurants.stream().filter(restaurant -> restaurant.getCategory().toLowerCase().equals( category.toLowerCase()) ).collect(Collectors.<Restaurant>toList()) );
+    }
+
+
+    private ArrayList<Restaurant> search(String name) {
+        if (name.trim().length() == 0) {
+            return restaurants;
+        }
+        return new ArrayList<Restaurant>( restaurants.stream().filter(restaurant -> restaurant.getName().toLowerCase().contains(name.toLowerCase()) ).collect(Collectors.<Restaurant>toList()) );
     }
 
 }
