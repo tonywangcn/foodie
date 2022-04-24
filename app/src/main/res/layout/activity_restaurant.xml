@@ -8,161 +8,119 @@
     android:fitsSystemWindows="true">
 
 
-
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="500dp"
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
+            android:id="@+id/restaurant"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginEnd="0dp"
             android:fitsSystemWindows="true"
             app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
-            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
+            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="40dp"
-                android:textSize="25sp"
-                android:textStyle="bold"
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="410dp"
+                android:layout_height="270dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginStart="1dp"
                 app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.7"/>
+            <ImageView
+                android:id="@+id/shadow"
+                android:layout_width="410dp"
+                android:layout_height="270dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginStart="1dp"
+                android:backgroundTint="@color/black"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.7"/>
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="220dp"
                 android:scaleType="centerCrop"
-                app:layout_collapseParallaxMultiplier="0.7"
+                android:textColor="@color/white"
+                android:textSize="35sp"
+                android:textStyle="bold"
                 app:expandedTitleMarginEnd="10dp"
                 app:expandedTitleMarginStart="10dp"
-                android:text="Find the best food" />
-
-            <EditText
-                android:id="@+id/search"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="140dp"
-                android:layout_width="370dp"
-                android:layout_height="50dp"
-                android:drawableLeft="@android:drawable/ic_menu_search"
-                android:textColor="@color/grey"
-                android:ems="10"
-                android:background="@drawable/edit_text_border"
-                android:inputType="text"
-                android:hint="Search"
-                android:textColorHint="@color/black"
-                android:imeOptions="actionSearch"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
                 app:layout_collapseMode="parallax"
-                android:scaleType="centerCrop"
                 app:layout_collapseParallaxMultiplier="0.7" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/address"
+                android:layout_width="100dp"
+                android:layout_height="20dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="220dp"
-                android:layout_width="wrap_content"
+                android:layout_marginTop="340dp"
+                android:textColor="@color/grey"
+                android:textSize="15sp"
+                android:drawablePadding="4dp"
+                android:drawableLeft="@drawable/address"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.7"/>
+
+            <TextView
+                android:id="@+id/openTime"
+                android:layout_width="140dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="370dp"
+                android:textColor="@color/grey"
+                android:textSize="15sp"
+                android:drawablePadding="4dp"
+                android:drawableLeft="@drawable/time"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.7"/>
+
+            <TextView
+                android:id="@+id/openStatus"
+                android:layout_width="115dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text"
-                android:textSize="25sp"
-                android:textStyle="bold"
-                android:text="Categories" />
-
-            <LinearLayout
-                android:foreground="?android:attr/selectableItemBackground"
-                android:id="@+id/fastfood"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="260dp"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:clickable="true">
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginStart="1dp"
-                    android:src="@drawable/fastfood"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:layout_marginTop="35dp"
-                    android:layout_marginStart="-60dp"
-                    android:textSize="12sp"
-                    android:textColor="@color/black"
-                    android:text="Fast Food"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:foreground="?android:attr/selectableItemBackground"
-                android:id="@+id/mexican"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
                 android:layout_marginStart="150dp"
-                android:layout_marginTop="260dp"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:clickable="true">
+                android:layout_marginTop="370dp"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.7"/>
 
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginStart="1dp"
-                    android:src="@drawable/mexican"/>
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="350dp"
+                android:layout_height="115dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="410dp"
+                android:textColor="@color/grey"
+                android:textSize="15sp"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.7"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:layout_marginTop="35dp"
-                    android:layout_marginStart="-60dp"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"
-                    android:text="Mexican Food"/>
-
-            </LinearLayout>
-            <LinearLayout
-                android:foreground="?android:attr/selectableItemBackground"
-                android:id="@+id/asian"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginStart="270dp"
-                android:layout_marginTop="260dp"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:clickable="true">
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginStart="1dp"
-                    android:src="@drawable/asian"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:layout_marginTop="35dp"
-                    android:layout_marginStart="-60dp"
-                    android:textSize="12sp"
-                    android:textColor="@color/black"
-                    android:text="Asian Food"/>
-
-            </LinearLayout>
+<!--            <ImageButton-->
+<!--                android:id="@+id/like"-->
+<!--                android:layout_width="80dp"-->
+<!--                android:layout_height="80dp"-->
+<!--                android:layout_marginStart="250dp"-->
+<!--                android:layout_marginTop="250dp"-->
+<!--                android:padding="10dp"-->
+<!--                android:scaleType="fitCenter"-->
+<!--                android:background="?selectableItemBackgroundBorderless"-->
+<!--                android:src="@drawable/like_empty" />-->
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView

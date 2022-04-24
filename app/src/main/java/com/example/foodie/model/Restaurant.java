@@ -7,7 +7,9 @@ import androidx.annotation.DrawableRes;
 
 import com.example.foodie.DetailActivity;
 
-public class Restaurant {
+import java.io.Serializable;
+
+public class Restaurant implements Serializable {
     private Integer id;
     private String name;
     private Float rating;

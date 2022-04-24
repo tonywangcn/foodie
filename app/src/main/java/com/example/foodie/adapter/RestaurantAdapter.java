@@ -89,6 +89,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
             public void onClick(View v) {
                 Log.d(TAG, "Item +" + position + " is clicked! id: " + restaurant.getId().toString());
                 Intent detail = new Intent(v.getContext(), DetailActivity.class);
+                detail.putExtra("restaurant", restaurant);
                 v.getContext().startActivity(detail);
             }
         });
