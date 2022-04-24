@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.Button;
 
-public class RestaurantActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity {
     public void onClick(View view) {
     }
     @Override

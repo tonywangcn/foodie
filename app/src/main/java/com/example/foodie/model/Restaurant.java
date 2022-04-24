@@ -5,9 +5,7 @@ import android.content.Intent;
 
 import androidx.annotation.DrawableRes;
 
-import com.example.foodie.RestaurantActivity;
-
-import java.util.Date;
+import com.example.foodie.DetailActivity;
 
 public class Restaurant {
     private Integer id;
@@ -136,7 +134,7 @@ public class Restaurant {
     }
 
     static Intent starter(Context context, String name, @DrawableRes int imageResId) {
-        Intent detailIntent = new Intent(context, RestaurantActivity.class);
+        Intent detailIntent = new Intent(context, DetailActivity.class);
 //        detailIntent.putExtra(TITLE_KEY, title);
 //        detailIntent.putExtra(IMAGE_KEY, imageResId);
         return detailIntent;
