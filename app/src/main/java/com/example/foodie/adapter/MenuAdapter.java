@@ -1,5 +1,6 @@
 package com.example.foodie.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -79,6 +80,42 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder>  {
         TextView number = holder.itemView.findViewById(R.id.number);
         number.getBackground().setAlpha(150);;
 
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (count >= 9) {
+                    new AlertDialog.Builder(view.getContext())
+                            .setTitle("Failed!!")
+                            .setPositiveButton("ok", null)
+                            .setMessage( "Maximum number reached !!!"  )
+                            .show();
+                    return;
+                }
+                count++;
+                if (count> 0) {
+                    number.setText(count.toString());
+                    del.setVisibility(View.VISIBLE);
+                    number.setVisibility(View.VISIBLE);
+                }
+                Log.d(TAG,"+ count: " + count.toString());
+            }
+        });
+
+        del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (count > 0) {
+                    count--;
+                }
+                Log.d(TAG, "- count: " + count.toString());
+                number.setText(count.toString());
+                if (count < 1) {
+                    del.setVisibility(View.INVISIBLE);
+                    number.setVisibility(View.INVISIBLE);
+                }
+
+            }
+        });
 
         //Picasso
         Picasso.get()
