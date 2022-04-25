@@ -9,4 +9,6 @@
     <color name="grey">#808080</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="purple">#220E77</color>
+    <color name="button">#5B4BFB</color>
 </resources>

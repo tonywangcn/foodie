@@ -26,23 +26,27 @@ public class OrderService extends SQLiteOpenHelper {
 
     public OrderService(Context context) {
         super(context, DATABASE_NAME, null, 1);
+        SQLiteDatabase db = this.getWritableDatabase();
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("DROP TABLE " + TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS "+  TABLE_NAME + " create table " + TABLE_NAME + " " +
+
+        String sql = "create table " + TABLE_NAME + " " +
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "user TEXT," +
                 "menuId INTEGER," +
                 "restaurantId INTEGER," +
                 "count INTEGER," +
                 "price REAL," +
-                "isPayed INTEGER DEFAULT 0)");
+                "isPayed INTEGER DEFAULT 0)";
+        db.execSQL(sql);
+        Log.d(TAG,"sql createTable: " + sql);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.d(TAG,"onUpgrade");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
     }
@@ -56,19 +60,19 @@ public class OrderService extends SQLiteOpenHelper {
         contentValues.put(COUNT, 1);
         contentValues.put(PRICE, price);
         long result = db.insert(TABLE_NAME, null, contentValues);
-        Log.d(TAG, "new order created " + result);
+        Log.d(TAG, "new order created " + result + " contentValues + " + contentValues.toString());
         return result != -1;
     }
 
     public boolean incrCount(String user, String restaurantId, String menuId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("UPDATE " + TABLE_NAME + " SET " + COUNT + " = " + COUNT + " + 1" + " WHERE " + USER + " = " + user + " AND " + RESTAURANT_ID + " = " + restaurantId + " AND " + MENU_ID + " = " + menuId );
+        db.execSQL("UPDATE " + TABLE_NAME + " SET " + COUNT + " = " + COUNT + " + 1" + " WHERE " + USER + " = '" + user + "' AND " + RESTAURANT_ID + " = " + restaurantId + " AND " + MENU_ID + " = " + menuId );
         return true;
     }
 
     public  boolean decrCount(String user, String restaurantId, String menuId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("UPDATE " + TABLE_NAME + " SET " + COUNT + " = " + COUNT + " - 1" + " WHERE " + USER + " = " + user + " AND " + RESTAURANT_ID + " = " + restaurantId + " AND " + MENU_ID + " = " + menuId );
+        db.execSQL("UPDATE " + TABLE_NAME + " SET " + COUNT + " = " + COUNT + " - 1" + " WHERE " + USER + " = '" + user + "' AND " + RESTAURANT_ID + " = " + restaurantId + " AND " + MENU_ID + " = " + menuId );
         return true;
     }
 
@@ -76,7 +80,7 @@ public class OrderService extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT " + COUNT + " from " + TABLE_NAME + " WHERE " + USER + " = ? AND " + RESTAURANT_ID + " = ? AND " + MENU_ID + " = ?" , new String[]{user, restaurantId, menuId});
         while(cursor.moveToFirst()) {
-             return cursor.getInt(cursor.getColumnIndex(COUNT)) ;
+             return cursor.getInt(0) ;
         }
         return 0;
     }
@@ -84,19 +88,22 @@ public class OrderService extends SQLiteOpenHelper {
     public ArrayList<Order> getAll(String user, String restaurantId) {
         ArrayList<Order> orders = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT " + COUNT + " from " + TABLE_NAME + " WHERE " + USER + " = ? AND " + RESTAURANT_ID + " = ? ", new String[]{user, restaurantId}, null);
-        Boolean next = cursor.moveToNext();
-        while(next) {
-            Log.d(TAG, "next :" + next.toString() + " cursor " + cursor.getInt(0) + " second " + cursor.getString(1));
-            Order order = new Order();
-            order.setId(cursor.getInt(0));
-            order.setUser(cursor.getString(1));
-            order.setMenuId(cursor.getInt(2));
-            order.setRestaurantId(cursor.getInt(3));
-            order.setCount(cursor.getInt(4));
-            order.setPrice(cursor.getFloat(5));
-            orders.add(order);
+        Cursor cursor = db.rawQuery("SELECT * from " + TABLE_NAME + " WHERE " + USER + " = ? AND " + RESTAURANT_ID + " = ? ", new String[]{user, restaurantId}, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Order order = new Order();
+                order.setId(cursor.getInt(cursor.getColumnIndex(ID)));
+                order.setUser(cursor.getString(cursor.getColumnIndex(USER)));
+                order.setMenuId(cursor.getInt( cursor.getColumnIndex(MENU_ID)));
+                order.setRestaurantId(cursor.getInt( cursor.getColumnIndex(RESTAURANT_ID)));
+                order.setCount(cursor.getInt(cursor.getColumnIndex(COUNT)));
+                order.setPrice(cursor.getFloat(cursor.getColumnIndex(PRICE)));
+                orders.add(order);
+            } while (cursor.moveToNext());
+
         }
+        Log.d(TAG,"getAll: orders: " + orders.toString());
         return orders;
     }
 }

@@ -77,4 +77,17 @@ public class Order {
     public void setPayed(Boolean payed) {
         isPayed = payed;
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", user='" + user + '\'' +
+                ", menuId=" + menuId +
+                ", restaurantId=" + restaurantId +
+                ", count=" + count +
+                ", price=" + price +
+                ", isPayed=" + isPayed +
+                '}';
+    }
 }

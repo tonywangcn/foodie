@@ -39,9 +39,9 @@ public class MenuService extends Firebase {
                         }
                         menus.postValue(results);
                     }
+                } else {
+                    Log.d(TAG, "Failed to find menus");
                 }
-                Log.d(TAG, "Failed to find restaurants");
-
             }
         });
         return menus;

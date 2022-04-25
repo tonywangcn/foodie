@@ -135,5 +135,15 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layoutAnimation="@anim/layout_animation" />
 
-
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/checkout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/checkout"
+        app:maxImageSize="50dp"
+        android:backgroundTint="@color/text"
+        app:tint="@android:color/white"
+        android:contentDescription="check out"
+        android:layout_margin="16dp" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

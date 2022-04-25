@@ -41,6 +41,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder>  {
     private Restaurant restaurant;
     private ArrayList<Order> orders;
     private OrderService orderService;
+    private ArrayList<Order> currentOrder;
     ImageButton add;
     ImageButton del;
     private Integer count = 0;
@@ -93,12 +94,26 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder>  {
         TextView number = holder.itemView.findViewById(R.id.number);
         number.getBackground().setAlpha(150);;
 
+        Log.d(TAG,"Orders + " + orders.toString());
+        Log.d(TAG, "user: " + user + " , restaurant id: "+ restaurant.getId().toString() + " , menu id: " + menu.getId().toString());
+        currentOrder = new ArrayList<Order>( orders.stream().filter(order -> order.getUser().equals(user) && order.getRestaurantId().equals(restaurant.getId()) && order.getMenuId().equals(menu.getId())).collect(Collectors.<Order>toList()));
+        Log.d(TAG,"currentOrder: " + currentOrder.toString());
+        if (currentOrder.size() != 0) {
+            Log.d(TAG,"current order count: "+ currentOrder.get(0).getCount().toString());
+            if (currentOrder.get(0).getCount()>0) {
+                number.setText(currentOrder.get(0).getCount().toString());
+                del.setVisibility(View.VISIBLE);
+                number.setVisibility(View.VISIBLE);
+            }
+
+        }
+
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG,"Orders + " + orders.toString());
-                ArrayList<Order> currentOrder = new ArrayList<Order>( orders.stream().filter(order -> order.getUser() == user && order.getRestaurantId() == restaurant.getId() && order.getMenuId() == menu.getId()).collect(Collectors.<Order>toList()));
-                Log.d(TAG,"currentOrder + " + currentOrder.toString());
+
+                currentOrder = new ArrayList<Order>( orders.stream().filter(order -> order.getUser().equals(user) && order.getRestaurantId().equals(restaurant.getId()) && order.getMenuId().equals(menu.getId())).collect(Collectors.<Order>toList()));
+
                 if (currentOrder.size() == 0) {
                     Boolean ok = orderService.newOrder(user, restaurant.getId().toString(), menu.getId().toString(), menu.getPrice());
                     number.setText("1");
@@ -117,13 +132,13 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder>  {
                     }
 
                     orderService.incrCount(user, restaurant.getId().toString(), menu.getId().toString());
-                    number.setText(currentOrder.get(0).getCount() + 1);
+                    number.setText(String.valueOf( currentOrder.get(0).getCount() + 1));
                     del.setVisibility(View.VISIBLE);
                     number.setVisibility(View.VISIBLE);
                 }
                 orders = orderService.getAll(user, restaurant.getId().toString());
 
-                Log.d(TAG,"+ count: " + count.toString());
+                Log.d(TAG,"incr | order size: " + orders.size() + " restaurant id: " + restaurant.getId().toString() + ", menu id:" +menu.getId().toString() + ", count: " + ( currentOrder.get(0).getCount() + 1));
             }
         });
 
@@ -132,14 +147,15 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder>  {
             public void onClick(View view) {
                 orders = orderService.getAll(user, restaurant.getId().toString());
                 Log.d(TAG,"Orders + " + orders.toString());
-                ArrayList<Order> currentOrder = new ArrayList<Order>( orders.stream().filter(order -> order.getUser() == user && order.getRestaurantId() == restaurant.getId() && order.getMenuId() == menu.getId()).collect(Collectors.<Order>toList()));
+                currentOrder = new ArrayList<Order>( orders.stream().filter(order -> order.getUser().equals(user) && order.getRestaurantId().equals( restaurant.getId()) && order.getMenuId().equals( menu.getId()) ).collect(Collectors.<Order>toList()));
                 if (currentOrder.get(0).getCount() <= 1) {
                     del.setVisibility(View.INVISIBLE);
                     number.setVisibility(View.INVISIBLE);
                 }
+                number.setText(String.valueOf(currentOrder.get(0).getCount() - 1));
                 orderService.decrCount(user, restaurant.getId().toString(), menu.getId().toString());
-
-                Log.d(TAG, "decr count: " + currentOrder.get(0).getCount().toString());
+                orders = orderService.getAll(user, restaurant.getId().toString());
+                Log.d(TAG,"decr | order size: " + orders.size() + " restaurant id: " + restaurant.getId().toString() + ", menu id:" +menu.getId().toString() + ", count: " + ( currentOrder.get(0).getCount() + 1));
 
             }
         });

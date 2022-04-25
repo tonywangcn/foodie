@@ -29,6 +29,7 @@ import com.example.foodie.service.MenuService;
 import com.example.foodie.service.RestaurantService;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ public class DetailActivity extends AppCompatActivity {
     private ImageView image;
     private ImageView like;
     private ImageView shadow;
+    private FloatingActionButton checkout;
 
     private RecyclerView menuView;
     private MenuAdapter menuAdapter;
@@ -89,7 +91,7 @@ public class DetailActivity extends AppCompatActivity {
         menusLiveData.observe(this, new Observer<ArrayList<Menu>>() {
             @Override
             public void onChanged(ArrayList<Menu> liveMenus) {
-                Log.d(TAG, "onChanged: " + menus.size());
+                Log.d(TAG, "onChanged: " + liveMenus.size());
                 menus = liveMenus;
                 menuAdapter = new MenuAdapter(DetailActivity.this, liveMenus, restaurant, user);
                 menuView.setAdapter(menuAdapter);
@@ -109,7 +111,6 @@ public class DetailActivity extends AppCompatActivity {
 
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                Log.d(TAG,"verticalOffset " + Integer.valueOf(verticalOffset).toString());
                 if (scrollRange == -1) {
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
@@ -122,6 +123,15 @@ public class DetailActivity extends AppCompatActivity {
                 }
             }
         });
+
+        checkout = findViewById(R.id.checkout);
+        checkout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG,"checkout clicked!!!");
+            }
+        });
+
 
     }
 
