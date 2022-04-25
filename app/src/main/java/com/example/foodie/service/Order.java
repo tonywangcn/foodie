@@ -16,6 +16,7 @@ public class Order extends SQLiteOpenHelper {
     public static final String COL_4 = "restaurantId";
     public static final String COL_5 = "count";
     public static final String COL_6 = "price";
+    public static final String COL_7 = "isPayed";
 
     public Order(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -25,8 +26,12 @@ public class Order extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + TABLE_NAME + " " +
                 "(ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "NAME TEXT," +
-                "MARKS INTEGER)");
+                "user TEXT," +
+                "menuId INTEGER," +
+                "restaurantId INTEGER," +
+                "count INTEGER," +
+                "price REAL," +
+                "isPayed INTEGER DEFAULT 0)");
     }
 
     @Override
