@@ -3,6 +3,7 @@ package com.example.foodie.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,24 +23,36 @@ import com.example.foodie.LoginActivity;
 import com.example.foodie.R;
 import com.example.foodie.SignupActivity;
 import com.example.foodie.model.Menu;
+import com.example.foodie.model.Order;
 import com.example.foodie.model.Restaurant;
+import com.example.foodie.service.OrderService;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import jp.wasabeef.picasso.transformations.CropSquareTransformation;
 
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder>  {
     private static final String TAG = MenuAdapter.class.getSimpleName();
+    private String user;
     private List<Menu> menus;
+    private Restaurant restaurant;
+    private ArrayList<Order> orders;
+    private OrderService orderService;
     ImageButton add;
     ImageButton del;
     private Integer count = 0;
     TextView number;
 
-    public MenuAdapter(Context context, List<Menu> data)
+    public MenuAdapter(Context context, List<Menu> data, Restaurant restaurant, String user)
     {
+        this.orderService = new OrderService(context);
         this.menus = data;
+        this.restaurant = restaurant;
+        this.user = user;
+        this.orders = orderService.getAll(user, restaurant.getId().toString());
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder
@@ -83,20 +96,33 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder>  {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (count >= 9) {
-                    new AlertDialog.Builder(view.getContext())
-                            .setTitle("Failed!!")
-                            .setPositiveButton("ok", null)
-                            .setMessage( "Maximum number reached !!!"  )
-                            .show();
-                    return;
-                }
-                count++;
-                if (count> 0) {
-                    number.setText(count.toString());
+                Log.d(TAG,"Orders + " + orders.toString());
+                ArrayList<Order> currentOrder = new ArrayList<Order>( orders.stream().filter(order -> order.getUser() == user && order.getRestaurantId() == restaurant.getId() && order.getMenuId() == menu.getId()).collect(Collectors.<Order>toList()));
+                Log.d(TAG,"currentOrder + " + currentOrder.toString());
+                if (currentOrder.size() == 0) {
+                    Boolean ok = orderService.newOrder(user, restaurant.getId().toString(), menu.getId().toString(), menu.getPrice());
+                    number.setText("1");
+                    del.setVisibility(View.VISIBLE);
+                    number.setVisibility(View.VISIBLE);
+                    Log.d(TAG,"new order created: " + ok);
+
+                }  else {
+                    if (currentOrder.get(0).getCount()>= 9) {
+                        new AlertDialog.Builder(view.getContext())
+                                .setTitle("Failed!!")
+                                .setPositiveButton("ok", null)
+                                .setMessage( "Maximum number reached !!!"  )
+                                .show();
+                        return;
+                    }
+
+                    orderService.incrCount(user, restaurant.getId().toString(), menu.getId().toString());
+                    number.setText(currentOrder.get(0).getCount() + 1);
                     del.setVisibility(View.VISIBLE);
                     number.setVisibility(View.VISIBLE);
                 }
+                orders = orderService.getAll(user, restaurant.getId().toString());
+
                 Log.d(TAG,"+ count: " + count.toString());
             }
         });
@@ -104,15 +130,16 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder>  {
         del.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (count > 0) {
-                    count--;
-                }
-                Log.d(TAG, "- count: " + count.toString());
-                number.setText(count.toString());
-                if (count < 1) {
+                orders = orderService.getAll(user, restaurant.getId().toString());
+                Log.d(TAG,"Orders + " + orders.toString());
+                ArrayList<Order> currentOrder = new ArrayList<Order>( orders.stream().filter(order -> order.getUser() == user && order.getRestaurantId() == restaurant.getId() && order.getMenuId() == menu.getId()).collect(Collectors.<Order>toList()));
+                if (currentOrder.get(0).getCount() <= 1) {
                     del.setVisibility(View.INVISIBLE);
                     number.setVisibility(View.INVISIBLE);
                 }
+                orderService.decrCount(user, restaurant.getId().toString(), menu.getId().toString());
+
+                Log.d(TAG, "decr count: " + currentOrder.get(0).getCount().toString());
 
             }
         });

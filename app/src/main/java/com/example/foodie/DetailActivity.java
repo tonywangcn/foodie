@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -38,6 +39,8 @@ import jp.wasabeef.picasso.transformations.CropSquareTransformation;
 public class DetailActivity extends AppCompatActivity {
 
     private static final String TAG = DetailActivity.class.getSimpleName();
+    SharedPreferences settings;
+    private String user;
     private Restaurant restaurant;
     private TextView name;
     private TextView address;
@@ -66,6 +69,14 @@ public class DetailActivity extends AppCompatActivity {
 //        restaurant = (Restaurant)intent.getSerializableExtra("restaurant");
 //        Log.d(TAG,"restaurant "+ restaurant.toString());
         restaurant = new Restaurant(5, "India Bar", new Float(4.6), "https://content.ticketarena.co.uk/media/14000/koko-mormor-180518-6-of-19.jpeg?height=1024&mode=crop&width=1024", "asian", "Indian food, not unlike any other country’s national food scene, is a vast constellation of culinary influences and traditions from all over the Asian continent.", "India", 11, 23, false);
+        settings = getSharedPreferences("UserInfo", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("email","hello@hello.com");
+        editor.commit();
+
+
+        user = settings.getString("email","").toString();
+
 
         setRestaurantView(restaurant);
 
@@ -80,7 +91,7 @@ public class DetailActivity extends AppCompatActivity {
             public void onChanged(ArrayList<Menu> liveMenus) {
                 Log.d(TAG, "onChanged: " + menus.size());
                 menus = liveMenus;
-                menuAdapter = new MenuAdapter(DetailActivity.this, liveMenus);
+                menuAdapter = new MenuAdapter(DetailActivity.this, liveMenus, restaurant, user);
                 menuView.setAdapter(menuAdapter);
                 menuAdapter.notifyDataSetChanged();
                 menuView.scheduleLayoutAnimation();

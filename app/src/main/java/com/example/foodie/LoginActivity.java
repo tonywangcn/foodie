@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Html;
@@ -24,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = LoginActivity.class.getSimpleName();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final UserService userService = new UserService();
+    SharedPreferences settings = getSharedPreferences("UserInfo", 0);
 
     private EditText email;
     private EditText password;
@@ -55,6 +57,9 @@ public class LoginActivity extends AppCompatActivity {
         isSigned.observe(this, ok -> {
             if (ok) {
                 Log.i(TAG,"Signin sucessfully!");
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString("email", emailTxt);
+                editor.commit();
                 Intent explore = new Intent(LoginActivity.this, ExploreActivity.class);
                 startActivity(explore);
             } else {
