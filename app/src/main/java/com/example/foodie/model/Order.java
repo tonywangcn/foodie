@@ -4,6 +4,7 @@ public class Order {
     private Integer id;
     private String user;
     private Integer menuId;
+    private String name;
     private Integer restaurantId;
     private Integer count;
     private Float price;
@@ -12,14 +13,23 @@ public class Order {
     public Order() {
     }
 
-    public Order(Integer id, String user, Integer menuId, Integer restaurantId, Integer count, Float price, Boolean isPayed) {
+    public Order(Integer id, String user, Integer menuId, String name, Integer restaurantId, Integer count, Float price, Boolean isPayed) {
         this.id = id;
         this.user = user;
         this.menuId = menuId;
+        this.name = name;
         this.restaurantId = restaurantId;
         this.count = count;
         this.price = price;
         this.isPayed = isPayed;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getId() {
@@ -84,6 +94,7 @@ public class Order {
                 "id=" + id +
                 ", user='" + user + '\'' +
                 ", menuId=" + menuId +
+                ", name='" + name + '\'' +
                 ", restaurantId=" + restaurantId +
                 ", count=" + count +
                 ", price=" + price +

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
+    android:padding="8dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        tools:cardElevation="4dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="H,1:1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/name"
+            style="@style/TextAppearance.AppCompat.Headline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="130dp"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/price"
+            style="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="150dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            tools:ignore="MissingConstraints" />
+        <ImageButton
+            android:id="@+id/del"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="150dp"
+            android:padding="1dp"
+            android:scaleType="fitCenter"
+            android:tint="@color/white"
+            android:visibility="invisible"
+            android:background="?selectableItemBackgroundBorderless"
+            android:src="@drawable/minus" />
+        <TextView
+            android:id="@+id/number"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="127dp"
+            android:layout_marginTop="154dp"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:text="1"
+            android:paddingLeft="5dp"
+            android:paddingBottom="4dp"
+            android:visibility="invisible"
+            android:background="@drawable/circle"
+            android:textColor="@color/black"
+            tools:ignore="MissingConstraints" />
+        <ImageButton
+            android:id="@+id/add"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="140dp"
+            android:layout_marginTop="150dp"
+            android:padding="1dp"
+            android:scaleType="fitCenter"
+            android:background="?selectableItemBackgroundBorderless"
+            android:tint="@color/white"
+            android:src="@drawable/add" />
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

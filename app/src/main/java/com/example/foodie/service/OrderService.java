@@ -18,6 +18,7 @@ public class OrderService extends SQLiteOpenHelper {
     public static final String TABLE_NAME = "orders";
     public static final String ID = "id";
     public static final String USER = "user";
+    public static final String NAME = "name";
     public static final String MENU_ID = "menuId";
     public static final String RESTAURANT_ID = "restaurantId";
     public static final String COUNT = "count";
@@ -35,6 +36,7 @@ public class OrderService extends SQLiteOpenHelper {
         String sql = "create table " + TABLE_NAME + " " +
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "user TEXT," +
+                "name TEXT," +
                 "menuId INTEGER," +
                 "restaurantId INTEGER," +
                 "count INTEGER," +
@@ -51,11 +53,12 @@ public class OrderService extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean newOrder(String user, String restaurantId, String menuId, Float price) {
+    public boolean newOrder(String user, String restaurantId, String menuId,String name, Float price) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(USER, user);
         contentValues.put(MENU_ID, menuId);
+        contentValues.put(NAME, name);
         contentValues.put(RESTAURANT_ID, restaurantId);
         contentValues.put(COUNT, 1);
         contentValues.put(PRICE, price);
@@ -85,16 +88,28 @@ public class OrderService extends SQLiteOpenHelper {
         return 0;
     }
 
+    public ArrayList<Order> getAllForUser(String user) {
+        ArrayList<Order> orders = new ArrayList<>();
+        String sql = "SELECT * from " + TABLE_NAME + " WHERE " + USER + " = ? ";
+        return query(sql,  new String[]{user});
+    }
+
     public ArrayList<Order> getAll(String user, String restaurantId) {
         ArrayList<Order> orders = new ArrayList<>();
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * from " + TABLE_NAME + " WHERE " + USER + " = ? AND " + RESTAURANT_ID + " = ? ", new String[]{user, restaurantId}, null);
+        String sql = "SELECT * from " + TABLE_NAME + " WHERE " + USER + " = ? AND " + RESTAURANT_ID + " = ? ";
+        return query(sql,  new String[]{user, restaurantId});
+    }
 
+    private ArrayList<Order> query(String sql, String[] param) {
+        ArrayList<Order> orders = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(sql, param, null);
         if (cursor.moveToFirst()) {
             do {
                 Order order = new Order();
                 order.setId(cursor.getInt(cursor.getColumnIndex(ID)));
                 order.setUser(cursor.getString(cursor.getColumnIndex(USER)));
+                order.setName(cursor.getString(cursor.getColumnIndex(NAME)));
                 order.setMenuId(cursor.getInt( cursor.getColumnIndex(MENU_ID)));
                 order.setRestaurantId(cursor.getInt( cursor.getColumnIndex(RESTAURANT_ID)));
                 order.setCount(cursor.getInt(cursor.getColumnIndex(COUNT)));
