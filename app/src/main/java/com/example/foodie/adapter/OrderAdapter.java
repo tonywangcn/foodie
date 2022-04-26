@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodie.OrderActivity;
@@ -36,16 +37,19 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     private ArrayList<Order> currentOrder;
     private Context context;
     private Order order;
+    private MutableLiveData<Float> subTotal;
+
     ImageButton add;
     ImageButton del;
     TextView number;
 
-    public OrderAdapter(Context context, ArrayList<Order> orders, String user)
+    public OrderAdapter(Context context, ArrayList<Order> orders, String user, MutableLiveData<Float> subTotal)
     {
         this.orderService = new OrderService(context);
         this.user = user;
         this.orders = orders;
         this.orders = orderService.getAllForUser(user);
+        this.subTotal = subTotal;
         this.context = context;
     }
 
@@ -104,7 +108,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
                 orderService.incrCount(user, order.getRestaurantId().toString(), order.getMenuId().toString());
                 number.setText(String.valueOf(order.getCount() + 1));
                 orders = orderService.getAllForUser(user);
-
+                subTotal.postValue(orderService.calculateTotalCost());
                 Log.d(TAG,"incr | order size: " + orders.size() + " restaurant id: " + order.getRestaurantId().toString() + ", menu id:" +order.getMenuId().toString() + ", count: " + ( order.getCount() + 1 ));
             }
         });
@@ -123,6 +127,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
                 orderService.decrCount(user, order.getRestaurantId().toString(), order.getMenuId().toString());
                 number.setText(String.valueOf(order.getCount() - 1));
                 orders = orderService.getAllForUser(user);
+                subTotal.postValue(orderService.calculateTotalCost());
                 Log.d(TAG,"decr | order size: " + orders.size() + " restaurant id: " + order.getRestaurantId().toString() + ", menu id:" +order.getMenuId().toString() + ", count: " + (order.getCount() - 1));
             }
         });

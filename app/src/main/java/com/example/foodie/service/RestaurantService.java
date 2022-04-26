@@ -18,8 +18,9 @@ import java.util.ArrayList;
 
 public class RestaurantService extends Firebase {
     private static final String TAG = RestaurantService.class.getSimpleName();
+    private ArrayList<Restaurant> restaurants;
 
-    private MutableLiveData<ArrayList<Restaurant>> restaurants;
+    private MutableLiveData<ArrayList<Restaurant>> results;
 
     public RestaurantService() {
         super();
@@ -27,8 +28,8 @@ public class RestaurantService extends Firebase {
 
     public MutableLiveData<ArrayList<Restaurant>> getRestaurants() {
 
-        restaurants = new MutableLiveData<ArrayList<Restaurant>>();
-        ArrayList<Restaurant> results = new ArrayList<Restaurant>();
+        results = new MutableLiveData<ArrayList<Restaurant>>();
+        restaurants = new ArrayList<Restaurant>();
 
         db.collection("restaurants").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -40,16 +41,16 @@ public class RestaurantService extends Firebase {
                     if (!documents.isEmpty()) {
                         for (DocumentSnapshot doc: documents) {
                             Restaurant r = doc.toObject(Restaurant.class);
-                            results.add(r);
+                            restaurants.add(r);
                         }
-                        restaurants.postValue(results);
+                        results.postValue(restaurants);
                     }
                 }
                 Log.d(TAG, "Failed to find restaurants" );
 
             }
         });
-        return restaurants;
+        return results;
     }
 
 }

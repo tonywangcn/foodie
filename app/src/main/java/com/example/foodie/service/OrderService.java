@@ -99,8 +99,9 @@ public class OrderService extends SQLiteOpenHelper {
         return query(sql,  new String[]{user, restaurantId});
     }
 
-    public Number calculateTotalCost() {
-        orders
+    public Float calculateTotalCost() {
+        Double r = orders.stream().mapToDouble( order -> order.getCount() * order.getPrice()).sum();
+        return r.floatValue();
     }
 
 
