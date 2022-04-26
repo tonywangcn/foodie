@@ -52,6 +52,7 @@ public class DetailActivity extends AppCompatActivity {
     private ImageView like;
     private ImageView shadow;
     private FloatingActionButton checkout;
+    private ImageButton back;
 
     private RecyclerView menuView;
     private MenuAdapter menuAdapter;
@@ -67,17 +68,22 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant);
 
-//        Intent intent = getIntent();
-//        restaurant = (Restaurant)intent.getSerializableExtra("restaurant");
-//        Log.d(TAG,"restaurant "+ restaurant.toString());
-        restaurant = new Restaurant(5, "India Bar", new Float(4.6), "https://content.ticketarena.co.uk/media/14000/koko-mormor-180518-6-of-19.jpeg?height=1024&mode=crop&width=1024", "asian", "Indian food, not unlike any other country’s national food scene, is a vast constellation of culinary influences and traditions from all over the Asian continent.", "India", 11, 23, false);
+        back = findViewById(R.id.back);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        Intent intent = getIntent();
+        restaurant = (Restaurant)intent.getSerializableExtra("restaurant");
+        Log.d(TAG,"restaurant "+ restaurant.toString());
+//        restaurant = new Restaurant(5, "India Bar", new Float(4.6), "https://content.ticketarena.co.uk/media/14000/koko-mormor-180518-6-of-19.jpeg?height=1024&mode=crop&width=1024", "asian", "Indian food, not unlike any other country’s national food scene, is a vast constellation of culinary influences and traditions from all over the Asian continent.", "India", 11, 23, false);
+
         settings = getSharedPreferences("UserInfo", 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("email","hello@hello.com");
-        editor.commit();
-
-
-        user = settings.getString("email","").toString();
+        user = settings.getString("email","");
 
 
         setRestaurantView(restaurant);
@@ -130,6 +136,7 @@ public class DetailActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d(TAG,"checkout clicked!!!");
                 Intent checkout = new Intent(view.getContext(), OrderActivity.class);
+                checkout.putExtra("restaurant", restaurant);
                 view.getContext().startActivity(checkout);
             }
         });

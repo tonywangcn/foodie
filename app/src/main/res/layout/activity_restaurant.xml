@@ -6,8 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
-
-
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
@@ -134,7 +132,16 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layoutAnimation="@anim/layout_animation" />
-
+    <ImageButton
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_arrow"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
+        android:tint="@color/white"
+        android:background="@android:color/transparent"
+        tools:ignore="ContentDescription" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/checkout"
         android:layout_width="wrap_content"

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -50,6 +51,7 @@ public class ExploreActivity extends AppCompatActivity {
     private LinearLayout fastFood;
     private LinearLayout mexican;
     private LinearLayout asian;
+    private SharedPreferences settings;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Toolbar toolbar;
@@ -60,6 +62,12 @@ public class ExploreActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_explore);
+        settings = getSharedPreferences("UserInfo", 0);
+
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("email","hello@hello.com");
+        editor.commit();
+
         //Initialize the RecyclerView
         restaurantView = (RecyclerView)findViewById(R.id.recyclerView);
         //Set the Layout Manager

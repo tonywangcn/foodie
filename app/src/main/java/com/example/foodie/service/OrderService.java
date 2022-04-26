@@ -8,8 +8,11 @@ import android.util.Log;
 
 import com.example.foodie.adapter.MenuAdapter;
 import com.example.foodie.model.Order;
+import com.example.foodie.model.Restaurant;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class OrderService extends SQLiteOpenHelper {
@@ -52,6 +55,11 @@ public class OrderService extends SQLiteOpenHelper {
         Log.d(TAG,"onUpgrade");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
+    }
+
+    public boolean clear(String user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_NAME, "user=?", new String[]{user}) > 0;
     }
 
     public boolean newOrder(String user, String restaurantId, String menuId,String name, Float price) {
@@ -104,6 +112,9 @@ public class OrderService extends SQLiteOpenHelper {
         return r.floatValue();
     }
 
+    public Boolean hasFreeDelivery(ArrayList<Restaurant> restaurants) {
+        return restaurants.stream().anyMatch(r -> r.getHasFreeDelivery() && orders.stream().anyMatch( o -> o.getRestaurantId().equals( r.getId() ) ) );
+    }
 
     private ArrayList<Order> query(String sql, String[] param) {
         orders = new ArrayList<>();

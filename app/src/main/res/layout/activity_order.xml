@@ -6,12 +6,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
+    <ImageButton
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_arrow"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
+        android:background="@android:color/transparent"
+        tools:ignore="ContentDescription" />
     <TextView
         android:id="@+id/name"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:scaleType="centerCrop"
         android:textColor="@color/purple"
         android:text="Order"
@@ -111,7 +120,7 @@
             android:layout_width="120dp"
             android:layout_height="30dp"
             android:layout_marginTop="130dp"
-            android:layout_marginEnd="-340dp"
+            android:layout_marginEnd="-280dp"
             android:textSize="25sp"
             android:textStyle="bold"
             android:textColor="@color/black"/>
