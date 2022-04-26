@@ -45,8 +45,9 @@ public class RestaurantService extends Firebase {
                         }
                         results.postValue(restaurants);
                     }
+                } else {
+                    Log.d(TAG, "Failed to find restaurants" );
                 }
-                Log.d(TAG, "Failed to find restaurants" );
 
             }
         });

@@ -24,6 +24,7 @@ import android.widget.Button;
 
 import com.example.foodie.adapter.MenuAdapter;
 import com.example.foodie.adapter.OrderAdapter;
+import com.example.foodie.model.Global;
 import com.example.foodie.model.Menu;
 import com.example.foodie.model.Order;
 import com.example.foodie.model.Restaurant;
@@ -47,7 +48,7 @@ public class OrderActivity extends AppCompatActivity {
     private  Button checkout;
     private TextView subTotalView;
     private TextView deliveryFeeView;
-    private Boolean hasFreeDelivery;
+    private Boolean hasDeliveryFee;
     private MutableLiveData<Boolean> hasFreeDeliveryLiveData;
     private TextView toPayView;
     private ImageButton back;
@@ -62,6 +63,8 @@ public class OrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
 
+        orderService = new OrderService(this);
+
        Intent intent = getIntent();
        restaurant = (Restaurant)intent.getSerializableExtra("restaurant");
        Log.d(TAG,"restaurant "+ restaurant.toString());
@@ -75,7 +78,9 @@ public class OrderActivity extends AppCompatActivity {
                 finish();
             }
         });
-
+        Global global = (Global) getApplicationContext();
+        ArrayList<Restaurant> restaurants = global.getRestaurants();
+        Log.d(TAG,"restaurants from global" + restaurants.toString());
 
         deliveryFeeView = findViewById(R.id.deliveryFee);
 
@@ -84,6 +89,8 @@ public class OrderActivity extends AppCompatActivity {
         orderService = new OrderService(getApplicationContext());
         orders = orderService.getAllForUser(user);
         Log.d(TAG, "orders: " + orders.toString());
+
+        hasDeliveryFee = orderService.hasDeliveryFee(restaurants);
 
         orderView = (RecyclerView)findViewById(R.id.orders);
         orderView.setLayoutManager(new LinearLayoutManager(OrderActivity.this));
@@ -94,12 +101,13 @@ public class OrderActivity extends AppCompatActivity {
         subTotal = orderService.calculateTotalCost();
 
         subTotalView.setText(" $ " + String.format("%.2f", subTotal) );
-        if (restaurant.getHasFreeDelivery()) {
-            deliveryFeeView.setText(" $ 0.00");
-            total = subTotal;
-        } else {
+        if (hasDeliveryFee) {
             deliveryFeeView.setText(" $ 10.00");
             total = subTotal + 10;
+        } else {
+            deliveryFeeView.setText(" $ 0.00");
+            total = subTotal;
+
 
         }
         toPayView.setText(" $ " + String.format("%.2f", total));
@@ -118,7 +126,7 @@ public class OrderActivity extends AppCompatActivity {
                 subTotal = subTotalLiveData;
                 subTotalView.setText(" $ " + String.format("%.2f",subTotal));
 
-                total = subTotal + (restaurant.getHasFreeDelivery() ? 0 : 10);
+                total = subTotal + (hasDeliveryFee ? 10 : 0);
                 toPayView.setText(" $ " + String.format("%.2f", total));
 
             }
@@ -133,6 +141,14 @@ public class OrderActivity extends AppCompatActivity {
                         .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Log.d(TAG,"ok clicked!");
+                                if (orderService.clear(user) ) {
+                                    Log.d(TAG, "user order is cleared!");
+                                } else {
+                                    Log.d(TAG, "user order failed to be cleared!");
+                                }
+                                Intent explore = new Intent(view.getContext(), ExploreActivity.class);
+                                view.getContext().startActivity(explore);
+
                             }
                         })
                         .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -140,7 +156,7 @@ public class OrderActivity extends AppCompatActivity {
                                 Log.d(TAG,"cancel clicked!");
                             }
                         })
-                        .setMessage( "Are you sure to pay? "  )
+                        .setMessage( "Are you sure going to pay?"  )
                         .show();
             }
         });

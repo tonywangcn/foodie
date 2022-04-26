@@ -112,8 +112,8 @@ public class OrderService extends SQLiteOpenHelper {
         return r.floatValue();
     }
 
-    public Boolean hasFreeDelivery(ArrayList<Restaurant> restaurants) {
-        return restaurants.stream().anyMatch(r -> r.getHasFreeDelivery() && orders.stream().anyMatch( o -> o.getRestaurantId().equals( r.getId() ) ) );
+    public Boolean hasDeliveryFee(ArrayList<Restaurant> rs) {
+        return rs.stream().anyMatch(r -> !r.getHasFreeDelivery() && orders.stream().anyMatch( o -> o.getCount() > 0 && o.getRestaurantId().equals( r.getId() ) ) );
     }
 
     private ArrayList<Order> query(String sql, String[] param) {

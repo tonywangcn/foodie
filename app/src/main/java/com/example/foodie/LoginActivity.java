@@ -25,7 +25,6 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = LoginActivity.class.getSimpleName();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final UserService userService = new UserService();
-    SharedPreferences settings = getSharedPreferences("UserInfo", 0);
 
     private EditText email;
     private EditText password;
@@ -33,6 +32,8 @@ public class LoginActivity extends AppCompatActivity {
     public void onClick(View view) {
         String emailTxt;
         String passwordTxt;
+
+        SharedPreferences settings = getSharedPreferences("UserInfo", 0);
 
         email = (EditText)findViewById(R.id.email);
         password = (EditText)findViewById(R.id.password);

@@ -80,11 +80,9 @@ public class DetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         restaurant = (Restaurant)intent.getSerializableExtra("restaurant");
         Log.d(TAG,"restaurant "+ restaurant.toString());
-//        restaurant = new Restaurant(5, "India Bar", new Float(4.6), "https://content.ticketarena.co.uk/media/14000/koko-mormor-180518-6-of-19.jpeg?height=1024&mode=crop&width=1024", "asian", "Indian food, not unlike any other country’s national food scene, is a vast constellation of culinary influences and traditions from all over the Asian continent.", "India", 11, 23, false);
 
         settings = getSharedPreferences("UserInfo", 0);
         user = settings.getString("email","");
-
 
         setRestaurantView(restaurant);
 

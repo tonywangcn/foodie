@@ -29,6 +29,7 @@ import android.widget.Button;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.foodie.adapter.RestaurantAdapter;
+import com.example.foodie.model.Global;
 import com.example.foodie.model.Restaurant;
 import com.example.foodie.service.RestaurantService;
 import com.google.android.material.appbar.AppBarLayout;
@@ -64,9 +65,11 @@ public class ExploreActivity extends AppCompatActivity {
         setContentView(R.layout.activity_explore);
         settings = getSharedPreferences("UserInfo", 0);
 
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("email","hello@hello.com");
-        editor.commit();
+        String user = settings.getString("email","");
+        if (user.length() == 0) {
+            Intent login = new Intent(this, LoginActivity.class);
+            startActivity(login);
+        }
 
         //Initialize the RecyclerView
         restaurantView = (RecyclerView)findViewById(R.id.recyclerView);
@@ -82,6 +85,10 @@ public class ExploreActivity extends AppCompatActivity {
             public void onChanged(ArrayList<Restaurant> liveRestaurants) {
                 Log.d(TAG, "onChanged: " + liveRestaurants.size());
                 restaurants = liveRestaurants;
+
+                Global global = (Global) getApplicationContext();
+                global.setRestaurants(restaurants);
+
                 restaurantAdapter = new RestaurantAdapter(ExploreActivity.this, liveRestaurants);
                 restaurantView.setAdapter(restaurantAdapter);
                 restaurantAdapter.notifyDataSetChanged();
