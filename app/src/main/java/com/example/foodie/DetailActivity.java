@@ -129,6 +129,8 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.d(TAG,"checkout clicked!!!");
+                Intent checkout = new Intent(view.getContext(), OrderActivity.class);
+                view.getContext().startActivity(checkout);
             }
         });
 

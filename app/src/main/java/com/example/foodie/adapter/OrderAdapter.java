@@ -33,6 +33,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     private ArrayList<Order> orders;
     private OrderService orderService;
     private ArrayList<Order> currentOrder;
+    private Context context;
+    private Order order;
     ImageButton add;
     ImageButton del;
     TextView number;
@@ -43,6 +45,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         this.user = user;
         this.orders = orders;
         this.orders = orderService.getAllForUser(user);
+        this.context = context;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder
@@ -69,35 +72,65 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         return viewHolder;
     }
 
-
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position)
     {
-        Order order = orders.get(position);
+        order = orders.get(position);
         Log.d(TAG, "onBindViewHolder: test position " + position  +", " + orders.get(position).toString());
-//        holder.name.setText(order);
-        holder.price.setText(order.getPrice().toString());
+        holder.price.setText(" $ "+ String. format("%.2f",order.getPrice()));
         holder.count.setText(order.getCount().toString());
         holder.name.setText(order.getName());
+        TextView number = holder.itemView.findViewById(R.id.number);
 
        ImageButton add = holder.itemView.findViewById(R.id.add);
        ImageButton del = holder.itemView.findViewById(R.id.del);
 
-//
-//        Log.d(TAG,"Orders + " + orders.toString());
-//        Log.d(TAG, "user: " + user + " , restaurant id: "+ restaurant.getId().toString() + " , menu id: " + menu.getId().toString());
-//        currentOrder = new ArrayList<Order>( orders.stream().filter(order -> order.getUser().equals(user) && order.getRestaurantId().equals(restaurant.getId()) && order.getMenuId().equals(menu.getId())).collect(Collectors.<Order>toList()));
-//        Log.d(TAG,"currentOrder: " + currentOrder.toString());
-//        if (currentOrder.size() != 0) {
-//            Log.d(TAG,"current order count: "+ currentOrder.get(0).getCount().toString());
-//            if (currentOrder.get(0).getCount()>0) {
-//                number.setText(currentOrder.get(0).getCount().toString());
-//                del.setVisibility(View.VISIBLE);
-//                number.setVisibility(View.VISIBLE);
-//            }
-//
-//        }
 
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                order = orders.get(position);
+
+                Log.d(TAG,"incr clicked " + order.getName());
+
+                if (order.getCount() >= 9) {
+                    new AlertDialog.Builder(view.getContext())
+                            .setTitle("Failed!!")
+                            .setPositiveButton("ok", null)
+                            .setMessage( "Menu "+ order.getName() +" maximum number reached !!!"  )
+                            .show();
+                    return;
+                }
+                orderService.incrCount(user, order.getRestaurantId().toString(), order.getMenuId().toString());
+                number.setText(String.valueOf(order.getCount() + 1));
+                orders = orderService.getAllForUser(user);
+
+                Log.d(TAG,"incr | order size: " + orders.size() + " restaurant id: " + order.getRestaurantId().toString() + ", menu id:" +order.getMenuId().toString() + ", count: " + ( order.getCount() + 1 ));
+            }
+        });
+
+        del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                order = orders.get(position);
+
+                Log.d(TAG,"decr clicked " + order.getName());
+                if (order.getCount() < 1) {
+                    Log.d(TAG,order.getName()+" zero reached ");
+                    return;
+                }
+
+
+                orderService.decrCount(user, order.getRestaurantId().toString(), order.getMenuId().toString());
+                number.setText(String.valueOf(order.getCount() - 1));
+                orders = orderService.getAllForUser(user);
+                if (order.getCount() - 1 == 0) {
+                    Log.d(TAG," zero reached ");
+                    holder.notify();
+                }
+                Log.d(TAG,"decr | order size: " + orders.size() + " restaurant id: " + order.getRestaurantId().toString() + ", menu id:" +order.getMenuId().toString() + ", count: " + (order.getCount() - 1));
+            }
+        });
 
     }
 
