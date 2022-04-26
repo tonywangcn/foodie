@@ -55,6 +55,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         public ViewHolder(View itemView)
         {
             super(itemView);
+            this.name = itemView.findViewById(R.id.name);
+            this.price = itemView.findViewById(R.id.price);
+            this.count = itemView.findViewById(R.id.number);
         }
     }
 

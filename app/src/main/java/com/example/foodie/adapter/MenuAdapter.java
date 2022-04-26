@@ -115,7 +115,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder>  {
                 currentOrder = new ArrayList<Order>( orders.stream().filter(order -> order.getUser().equals(user) && order.getRestaurantId().equals(restaurant.getId()) && order.getMenuId().equals(menu.getId())).collect(Collectors.<Order>toList()));
 
                 if (currentOrder.size() == 0) {
-                    Boolean ok = orderService.newOrder(user, restaurant.getId().toString(), menu.getId().toString(), menu.getPrice());
+                    Boolean ok = orderService.newOrder(user, restaurant.getId().toString(), menu.getId().toString(), menu.getName(),menu.getPrice());
                     number.setText("1");
                     del.setVisibility(View.VISIBLE);
                     number.setVisibility(View.VISIBLE);
@@ -138,7 +138,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder>  {
                 }
                 orders = orderService.getAll(user, restaurant.getId().toString());
 
-                Log.d(TAG,"incr | order size: " + orders.size() + " restaurant id: " + restaurant.getId().toString() + ", menu id:" +menu.getId().toString() + ", count: " + ( currentOrder.get(0).getCount() + 1));
+                Log.d(TAG,"incr | order size: " + orders.size() + " restaurant id: " + restaurant.getId().toString() + ", menu id:" +menu.getId().toString() + ", count: " + ( currentOrder.size() > 0 ? currentOrder.get(0).getCount() + 1 : 1));
             }
         });
 

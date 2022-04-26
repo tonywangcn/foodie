@@ -9,8 +9,8 @@
     android:padding="8dp">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="400dp"
+        android:layout_height="50dp"
         tools:cardElevation="4dp"
         android:scaleType="centerCrop"
         app:layout_constraintDimensionRatio="H,1:1"
@@ -23,12 +23,13 @@
         <TextView
             android:id="@+id/name"
             style="@style/TextAppearance.AppCompat.Headline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="130dp"
+            android:layout_marginTop="10dp"
             android:textSize="15sp"
             android:textStyle="bold"
+            android:textColor="@color/black"
             android:theme="@style/ThemeOverlay.AppCompat.Dark"
             tools:ignore="MissingConstraints" />
 
@@ -38,20 +39,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="150dp"
+            android:layout_marginTop="10dp"
             android:textStyle="bold"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             tools:ignore="MissingConstraints" />
         <ImageButton
             android:id="@+id/del"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginStart="100dp"
-            android:layout_marginTop="150dp"
+            android:layout_marginTop="10dp"
             android:padding="1dp"
             android:scaleType="fitCenter"
             android:tint="@color/white"
-            android:visibility="invisible"
             android:background="?selectableItemBackgroundBorderless"
             android:src="@drawable/minus" />
         <TextView
@@ -59,13 +59,12 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="127dp"
-            android:layout_marginTop="154dp"
+            android:layout_marginTop="10dp"
             android:textStyle="bold"
             android:textSize="15sp"
             android:text="1"
             android:paddingLeft="5dp"
             android:paddingBottom="4dp"
-            android:visibility="invisible"
             android:background="@drawable/circle"
             android:textColor="@color/black"
             tools:ignore="MissingConstraints" />
@@ -74,7 +73,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginStart="140dp"
-            android:layout_marginTop="150dp"
+            android:layout_marginTop="10dp"
             android:padding="1dp"
             android:scaleType="fitCenter"
             android:background="?selectableItemBackgroundBorderless"
