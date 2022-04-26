@@ -24,6 +24,7 @@ public class OrderService extends SQLiteOpenHelper {
     public static final String COUNT = "count";
     public static final String PRICE = "price";
     public static final String IS_PAYED = "isPayed";
+    private ArrayList<Order> orders;
 
     public OrderService(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -89,19 +90,22 @@ public class OrderService extends SQLiteOpenHelper {
     }
 
     public ArrayList<Order> getAllForUser(String user) {
-        ArrayList<Order> orders = new ArrayList<>();
         String sql = "SELECT * from " + TABLE_NAME + " WHERE " + USER + " = ? ";
         return query(sql,  new String[]{user});
     }
 
     public ArrayList<Order> getAll(String user, String restaurantId) {
-        ArrayList<Order> orders = new ArrayList<>();
         String sql = "SELECT * from " + TABLE_NAME + " WHERE " + USER + " = ? AND " + RESTAURANT_ID + " = ? ";
         return query(sql,  new String[]{user, restaurantId});
     }
 
+    public Number calculateTotalCost() {
+        orders
+    }
+
+
     private ArrayList<Order> query(String sql, String[] param) {
-        ArrayList<Order> orders = new ArrayList<>();
+        orders = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(sql, param, null);
         if (cursor.moveToFirst()) {

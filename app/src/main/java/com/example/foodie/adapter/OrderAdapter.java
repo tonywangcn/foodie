@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.foodie.OrderActivity;
 import com.example.foodie.R;
 import com.example.foodie.model.Menu;
 import com.example.foodie.model.Order;
@@ -82,9 +83,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         holder.name.setText(order.getName());
         TextView number = holder.itemView.findViewById(R.id.number);
 
-       ImageButton add = holder.itemView.findViewById(R.id.add);
-       ImageButton del = holder.itemView.findViewById(R.id.del);
-
+        ImageButton add = holder.itemView.findViewById(R.id.add);
+        ImageButton del = holder.itemView.findViewById(R.id.del);
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,14 +120,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
                     return;
                 }
 
-
                 orderService.decrCount(user, order.getRestaurantId().toString(), order.getMenuId().toString());
                 number.setText(String.valueOf(order.getCount() - 1));
                 orders = orderService.getAllForUser(user);
-                if (order.getCount() - 1 == 0) {
-                    Log.d(TAG," zero reached ");
-                    holder.notify();
-                }
                 Log.d(TAG,"decr | order size: " + orders.size() + " restaurant id: " + order.getRestaurantId().toString() + ", menu id:" +order.getMenuId().toString() + ", count: " + (order.getCount() - 1));
             }
         });

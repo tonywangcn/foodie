@@ -32,6 +32,7 @@ public class OrderActivity extends AppCompatActivity {
     private ArrayList<Order> orders;
     private RecyclerView orderView;
     private OrderAdapter orderAdapter;
+    private  Button checkout;
 
     public void onClick(View view) {
     }
@@ -59,9 +60,18 @@ public class OrderActivity extends AppCompatActivity {
         orderView = (RecyclerView)findViewById(R.id.orders);
         orderView.setLayoutManager(new LinearLayoutManager(OrderActivity.this));
 
+        checkout = findViewById(R.id.checkout);
+
         orderAdapter = new OrderAdapter(OrderActivity.this, orders, user);
         orderView.setAdapter(orderAdapter);
         orderAdapter.notifyDataSetChanged();
         orderView.scheduleLayoutAnimation();
+
+        checkout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG,"checkout clicked!!!");
+            }
+        });
     }
 }
