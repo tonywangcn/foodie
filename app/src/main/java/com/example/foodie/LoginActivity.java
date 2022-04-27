@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        if (passwordTxt.length() < 8 && !userService.passwordValidator(passwordTxt)) {
+        if (passwordTxt.length() < 8 || !userService.passwordValidator(passwordTxt)) {
             password.setError("Password must contain minimum 8 characters at least 1 Alphabet, 1 Number and 1 Special Character!");
             password.requestFocus();
             return;

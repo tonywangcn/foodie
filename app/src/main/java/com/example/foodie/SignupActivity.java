@@ -49,10 +49,14 @@ public class SignupActivity extends AppCompatActivity {
         String usernameTxt = username.getText().toString();
         String passwordTxt = password.getText().toString();
 
+        if (usernameTxt.trim().length() == 0 ) {
+            username.setError("Name can't be empty!");
+            username.requestFocus();
+            return;
+        }
 
         if (!userService.emailValidator(emailTxt)) {
             email.setError("Invalid Email!");
-            email.setText("");
             email.requestFocus();
             return;
         }
@@ -63,11 +67,7 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
-        if (usernameTxt.trim().length() == 0 ) {
-            username.setError("Name can't be empty!");
-            username.requestFocus();
-            return;
-        }
+
 
         MutableLiveData<User> user = userService.getUserDocument(emailTxt);
         user.observe(this, data -> {
@@ -79,9 +79,9 @@ public class SignupActivity extends AppCompatActivity {
             } else {
                 User u = new User(usernameTxt, emailTxt);
                 try {
-                    u.setPassword(passwordTxt);
+                    u.hashPassword(passwordTxt);
                 } catch (Exception e) {
-                    Log.e(TAG,e.getMessage());
+                    Log.e(TAG,"failed to hash password " + e.getMessage());
                     userService.Msg(SignupActivity.this,"Something wrong happened! Please try again!", true);
                     return;
                 }

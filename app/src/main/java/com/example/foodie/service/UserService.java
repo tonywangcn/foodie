@@ -47,9 +47,13 @@ public class UserService extends Firebase {
                         for (DocumentSnapshot doc: documents) {
                             User u = doc.toObject(User.class);
                             try {
-                                u.validatePassword(password);
+                                if (!u.validatePassword(password)) {
+                                    Log.e(TAG,"password doesn't match!");
+                                    isValid.postValue(false);
+                                    return;
+                                }
                             } catch (Exception e) {
-                                Log.e(TAG,e.getMessage());
+                                Log.e(TAG,"failed to validate password: "+ e.getMessage());
                                 isValid.postValue(false);
                                 return;
                             }
@@ -145,7 +149,7 @@ public class UserService extends Firebase {
 
         Pattern pattern;
         Matcher matcher;
-        final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$";
+        final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
         pattern = Pattern.compile(PASSWORD_PATTERN);
         matcher = pattern.matcher(password);
         return matcher.matches();

@@ -1,5 +1,9 @@
 package com.example.foodie.model;
 
+import android.util.Log;
+
+import com.example.foodie.LoginActivity;
+
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -9,6 +13,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 public class User {
+    private static final String TAG = User.class.getSimpleName();
     private String username;
     private String password;
     private String email;
@@ -33,7 +38,9 @@ public class User {
         return this.password;
     }
 
-    public void setPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public  void setPassword(String password) { this.password = password;}
+
+    public void hashPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
         this.password = generateStorngPasswordHash(password);
     }
 
@@ -53,7 +60,6 @@ public class User {
             "}";
     }
 
-
     private static String generateStorngPasswordHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
         int iterations = 1000;
         char[] chars = password.toCharArray();
@@ -63,6 +69,7 @@ public class User {
         SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 
         byte[] hash = skf.generateSecret(spec).getEncoded();
+        Log.d(TAG,"generating password "+"salt: "+ salt +",salt hex:"+ toHex(salt) + ", hash: " + hash + "hash hex:" + toHex(hash));
         return iterations + ":" + toHex(salt) + ":" + toHex(hash);
     }
 
@@ -85,32 +92,36 @@ public class User {
         }
     }
 
+    private static byte[] fromHex(String hex) throws NoSuchAlgorithmException {
+        byte[] bytes = new byte[hex.length() / 2];
+        for(int i = 0; i < bytes.length ;i++)
+        {
+            bytes[i] = (byte)Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
+        }
+        return bytes;
+    }
+
     public boolean validatePassword(String originalPassword)  throws NoSuchAlgorithmException, InvalidKeySpecException {
         String[] parts = password.split(":");
         int iterations = Integer.parseInt(parts[0]);
 
         byte[] salt = fromHex(parts[1]);
         byte[] hash = fromHex(parts[2]);
-
+        Log.d(TAG,"validatePassword "+"salt: "+ salt+ ", salt hex: " + parts[1] + ", hash: " + hash + ",hash hex:" + parts[2]);
         PBEKeySpec spec = new PBEKeySpec(originalPassword.toCharArray(), 
             salt, iterations, hash.length * 8);
         SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
         byte[] testHash = skf.generateSecret(spec).getEncoded();
 
+        Log.d(TAG,"testHash :"+ testHash +", hash: "+ hash);
         int diff = hash.length ^ testHash.length;
         for(int i = 0; i < hash.length && i < testHash.length; i++)
         {
             diff |= hash[i] ^ testHash[i];
         }
+        Log.d(TAG,"diff: "+ diff);
         return diff == 0;
     }
-    private static byte[] fromHex(String hex) throws NoSuchAlgorithmException {
-        byte[] bytes = new byte[hex.length() / 2];
-        for(int i = 0; i < bytes.length ;i++)
-            {
-                bytes[i] = (byte)Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
-            }
-        return bytes;
-    }
+
 }
 
